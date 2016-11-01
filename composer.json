@@ -1,0 +1,25 @@
+{
+    "name": "ahmetertem/dbr",
+    "type" : "library",
+    "description": "Database Record Class",
+    "keywords": ["php mysql","pdo","mysql","orm class", "orm"],
+    "homepage": "http://www.ahmetertem.com",
+    "license": "MIT",
+    "authors": [
+            {
+                "name": "Ahmet Ertem",
+                "email": "amadertem@gmail.com",
+                "homepage": "http://www.ahmetertem.com",
+                "role": "Lead Developer"
+            }
+        ],
+    "require": {
+        "php": ">=5.3.0",
+		"ahmetertem/qb": "1.*"
+    },
+    "autoload": {
+        "files": [
+            "src/qb.php"
+        ]
+    }
+}

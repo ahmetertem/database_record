@@ -1,0 +1,8 @@
+vendor
+composer.lock
+save-commands.json
+
+# Eclipse-specific files
+/.settings/
+/.buildpath
+/.project
