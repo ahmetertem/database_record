@@ -1,5 +1,5 @@
 {
-    "name": "ahmetertem/dbr",
+    "name": "ahmetertem/database_record",
     "type" : "library",
     "description": "Database Record Class",
     "keywords": ["php mysql","pdo","mysql","orm class", "orm"],
@@ -15,7 +15,7 @@
         ],
     "require": {
         "php": ">=5.3.0",
-		"ahmetertem/qb": "1.*"
+		"ahmetertem/query_builder": "1.*"
     },
     "autoload": {
         "files": [
