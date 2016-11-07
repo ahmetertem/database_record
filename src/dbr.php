@@ -6,6 +6,7 @@ use PDO;
 
 class dbr
 {
+    public static $PHP_FAST_CACHE_PREFIX = null;
     public static $PHP_FAST_CACHE = null;
     public static $PDO = null;
 
@@ -46,7 +47,7 @@ class dbr
         $this->parseFields();
         $row = null;
         if (self::$PHP_FAST_CACHE !== null) {
-            $cached_string = self::$PHP_FAST_CACHE->getItem($this->_table_name.'.'.$id);
+            $cached_string = self::$PHP_FAST_CACHE->getItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$id);
             $row = $cached_string->get();
         }
         if ($row == null) {
@@ -123,7 +124,7 @@ class dbr
         }
         $this->parseFields();
         if (self::$PHP_FAST_CACHE !== null) {
-            self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+            self::$PHP_FAST_CACHE->deleteItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
         }
         $qb = new qb();
         $qb->table($this->_table_name);
@@ -164,7 +165,7 @@ class dbr
             throw new Exception('_id_field is null');
         }
         if (self::$PHP_FAST_CACHE !== null) {
-            self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+            self::$PHP_FAST_CACHE->deleteItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
         }
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
