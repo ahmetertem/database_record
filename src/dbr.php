@@ -2,9 +2,6 @@
 
 namespace ahmetertem;
 
-use PDO;
-use Exception;
-
 abstract class dbr
 {
     public static $PHP_FAST_CACHE_PREFIX = null;
@@ -21,7 +18,7 @@ abstract class dbr
     public function __construct()
     {
         if (self::$PDO == null) {
-            throw new Exception('PDO must be set as static variable!');
+            throw new \Exception('PDO must be set as static variable!');
         }
     }
 
@@ -40,10 +37,10 @@ abstract class dbr
     public function getById($id)
     {
         if (is_null($this->_table_name) || $this->_table_name == null) {
-            throw new Exception('_table_name is null');
+            throw new \Exception('_table_name is null');
         }
         if (is_null($this->_id_field) || $this->_id_field == null) {
-            throw new Exception('_id_field is null');
+            throw new \Exception('_id_field is null');
         }
         $this->parseFields();
         $row = null;
@@ -65,7 +62,7 @@ abstract class dbr
             }
             $sth = self::$PDO->prepare($qb->getSelect());
             $sth->execute($execute);
-            $row = $sth->fetch(PDO::FETCH_ASSOC);
+            $row = $sth->fetch(\PDO::FETCH_ASSOC);
             if (self::$PHP_FAST_CACHE !== null) {
                 $cached_string->set($row);
                 self::$PHP_FAST_CACHE->save($cached_string);
@@ -90,7 +87,7 @@ abstract class dbr
     public function insert()
     {
         if (is_null($this->_table_name) || $this->_table_name == null) {
-            throw new Exception('_table_name is null');
+            throw new \Exception('_table_name is null');
         }
         $this->parseFields();
         $qb = new qb();
@@ -107,7 +104,7 @@ abstract class dbr
         $result = self::$PDO->exec($qb->getInsert());
         if ($result == false) {
             $error = self::$PDO->errorInfo();
-            throw new Exception($error[2]);
+            throw new \Exception($error[2]);
         } else {
             if ($this->_id_field != null && intval($this->{$this->_id_field}) == 0) {
                 $this->{$this->_id_field} = self::$PDO->lastInsertId();
@@ -118,10 +115,10 @@ abstract class dbr
     public function update()
     {
         if (is_null($this->_table_name) || $this->_table_name == null) {
-            throw new Exception('_table_name is null');
+            throw new \Exception('_table_name is null');
         }
         if (is_null($this->_id_field) || $this->_id_field == null) {
-            throw new Exception('_id_field is null');
+            throw new \Exception('_id_field is null');
         }
         $this->parseFields();
         if (self::$PHP_FAST_CACHE !== null) {
@@ -153,17 +150,17 @@ abstract class dbr
                 var_dump($this);
                 echo '</pre>';
             }
-            throw new Exception($error[2]);
+            throw new \Exception($error[2]);
         }
     }
 
     public function delete($is_psychical = false)
     {
         if (is_null($this->_table_name) || $this->_table_name == null) {
-            throw new Exception('_table_name is null');
+            throw new \Exception('_table_name is null');
         }
         if (is_null($this->_id_field) || $this->_id_field == null) {
-            throw new Exception('_id_field is null');
+            throw new \Exception('_id_field is null');
         }
         if (self::$PHP_FAST_CACHE !== null) {
             self::$PHP_FAST_CACHE->deleteItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
