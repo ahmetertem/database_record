@@ -17,6 +17,9 @@
         "php": ">=5.3.0",
 		"ahmetertem/query_builder": "1.*"
     },
+	"suggest": {
+		"phpfastcache/phpfastcache": "dev-final"
+	},
     "autoload": {
         "files": [
             "src/dbr.php"
