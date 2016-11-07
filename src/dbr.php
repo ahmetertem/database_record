@@ -3,6 +3,7 @@
 namespace ahmetertem;
 
 use PDO;
+use Exception;
 
 abstract class dbr
 {
@@ -20,7 +21,7 @@ abstract class dbr
     public function __construct()
     {
         if (self::$PDO == null) {
-            throw new exception('PDO must be set as static variable!');
+            throw new Exception('PDO must be set as static variable!');
         }
     }
 
