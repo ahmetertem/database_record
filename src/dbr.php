@@ -4,6 +4,9 @@ namespace ahmetertem;
 
 class dbr
 {
+    public static $PHP_FAST_CACHE = null;
+    public static $PDO = null;
+
     protected $_fields = array();
     protected $_table_name;
     protected $_id_field = null;
@@ -31,11 +34,8 @@ class dbr
         if (is_null($this->_id_field) || $this->_id_field == null) {
             throw new Exception('_id_field is null');
         }
-        global $app;
         $this->parseFields();
-        // must be commented !!!
-        // $this->{$this->_id_field} = $id;
-        $cached_string = $app->CACHE->getItem($this->_table_name.'.'.$id);
+        $cached_string = self::$PHP_FAST_CACHE->getItem($this->_table_name.'.'.$id);
         $row = $cached_string->get();
         if ($row == null) {
             $qb = new qb();
@@ -49,11 +49,11 @@ class dbr
                     $qb->where($ff, ':'.$ff);
                 }
             }
-            $sth = $app->DB->prepare($qb->getSelect());
+            $sth = self::$PDO->prepare($qb->getSelect());
             $sth->execute($execute);
             $row = $sth->fetch(PDO::FETCH_ASSOC);
             $cached_string->set($row);
-            $app->CACHE->save($cached_string);
+            self::$PHP_FAST_CACHE->save($cached_string);
         }
         if ($row == false) {
             return false;
@@ -76,7 +76,6 @@ class dbr
         if (is_null($this->_table_name) || $this->_table_name == null) {
             throw new Exception('_table_name is null');
         }
-        global $app;
         $this->parseFields();
         $qb = new qb();
         $qb->table($this->_table_name);
@@ -89,13 +88,13 @@ class dbr
                 $qb->set($value, $val, $val == '(NULL)' || is_numeric($val) ? 1 : 0);
             }
         }
-        $result = $app->DB->exec($qb->getInsert());
+        $result = self::$PDO->exec($qb->getInsert());
         if ($result == false) {
-            $error = $app->DB->errorInfo();
+            $error = self::$PDO->errorInfo();
             throw new Exception($error[2]);
         } else {
             if ($this->_id_field != null && intval($this->{$this->_id_field}) == 0) {
-                $this->{$this->_id_field} = $app->DB->lastInsertId();
+                $this->{$this->_id_field} = self::$PDO->lastInsertId();
             }
         }
     }
@@ -108,9 +107,8 @@ class dbr
         if (is_null($this->_id_field) || $this->_id_field == null) {
             throw new Exception('_id_field is null');
         }
-        global $app;
         $this->parseFields();
-        $app->CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+        self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
         $qb = new qb();
         $qb->table($this->_table_name);
         foreach ($this->_parsed_fields as $key => $value) {
@@ -128,10 +126,10 @@ class dbr
             $qb->where($ff, ':'.$ff);
             $exec[$ff] = $this->$ff;
         }
-        $sth = $app->DB->prepare($qb->getUpdate());
+        $sth = self::$PDO->prepare($qb->getUpdate());
         $result = $sth->execute($exec);
         if ($result === false) {
-            $error = $app->DB->errorInfo();
+            $error = self::$PDO->errorInfo();
             if (false) {
                 echo '<pre>';
                 var_dump($this);
@@ -149,14 +147,13 @@ class dbr
         if (is_null($this->_id_field) || $this->_id_field == null) {
             throw new Exception('_id_field is null');
         }
-        global $app;
-        $app->CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+        self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
         if ($is_psychical) {
-            $app->DB->exec($qb->getDelete());
+            self::$PDO->exec($qb->getDelete());
         }
         $qb->set('is_deleted', 1, 1);
-        $app->DB->exec($qb->getUpdate());
+        self::$PDO->exec($qb->getUpdate());
     }
 }
