@@ -14,6 +14,13 @@ class dbr
 
     private $_parsed_fields = array();
 
+    public function __construct()
+    {
+        if (self::$PDO == null) {
+            throw new exception('PDO must be set as static variable!');
+        }
+    }
+
     protected function parseFields()
     {
         $this->_parsed_fields = array();
@@ -35,8 +42,11 @@ class dbr
             throw new Exception('_id_field is null');
         }
         $this->parseFields();
-        $cached_string = self::$PHP_FAST_CACHE->getItem($this->_table_name.'.'.$id);
-        $row = $cached_string->get();
+        $row = null;
+        if (self::$PHP_FAST_CACHE !== null) {
+            $cached_string = self::$PHP_FAST_CACHE->getItem($this->_table_name.'.'.$id);
+            $row = $cached_string->get();
+        }
         if ($row == null) {
             $qb = new qb();
             $execute = array('id' => $id);
@@ -52,8 +62,10 @@ class dbr
             $sth = self::$PDO->prepare($qb->getSelect());
             $sth->execute($execute);
             $row = $sth->fetch(PDO::FETCH_ASSOC);
-            $cached_string->set($row);
-            self::$PHP_FAST_CACHE->save($cached_string);
+            if (self::$PHP_FAST_CACHE !== null) {
+                $cached_string->set($row);
+                self::$PHP_FAST_CACHE->save($cached_string);
+            }
         }
         if ($row == false) {
             return false;
@@ -108,7 +120,9 @@ class dbr
             throw new Exception('_id_field is null');
         }
         $this->parseFields();
-        self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+        if (self::$PHP_FAST_CACHE !== null) {
+            self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+        }
         $qb = new qb();
         $qb->table($this->_table_name);
         foreach ($this->_parsed_fields as $key => $value) {
@@ -147,7 +161,9 @@ class dbr
         if (is_null($this->_id_field) || $this->_id_field == null) {
             throw new Exception('_id_field is null');
         }
-        self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+        if (self::$PHP_FAST_CACHE !== null) {
+            self::$PHP_FAST_CACHE->deleteItem($this->_table_name.'.'.$this->{$this->_id_field});
+        }
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
         if ($is_psychical) {
