@@ -4,7 +4,7 @@ namespace ahmetertem;
 
 use PDO;
 
-class dbr
+abstract class dbr
 {
     public static $PHP_FAST_CACHE_PREFIX = null;
     public static $PHP_FAST_CACHE = null;
