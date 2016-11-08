@@ -45,7 +45,7 @@ abstract class dbr
         $this->parseFields();
         $row = null;
         if (self::$PHP_FAST_CACHE !== null) {
-            $cached_string = self::$PHP_FAST_CACHE->getItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$id);
+            $cached_string = self::$PHP_FAST_CACHE->getItem(self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$id);
             $row = $cached_string->get();
         }
         if ($row == null) {
@@ -122,7 +122,7 @@ abstract class dbr
         }
         $this->parseFields();
         if (self::$PHP_FAST_CACHE !== null) {
-            self::$PHP_FAST_CACHE->deleteItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
+            self::$PHP_FAST_CACHE->deleteItem(self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
         }
         $qb = new qb();
         $qb->table($this->_table_name);
@@ -163,7 +163,7 @@ abstract class dbr
             throw new \Exception('_id_field is null');
         }
         if (self::$PHP_FAST_CACHE !== null) {
-            self::$PHP_FAST_CACHE->deleteItem($PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
+            self::$PHP_FAST_CACHE->deleteItem(self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
         }
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
