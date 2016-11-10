@@ -167,6 +167,7 @@ abstract class dbr
         }
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
+        $execute = array();
         if (count($this->_where_extra_fields) > 0) {
             foreach ($this->_where_extra_fields as $ff) {
                 $execute[$ff] = $this->$ff;
@@ -174,7 +175,8 @@ abstract class dbr
             }
         }
         if ($is_psychical) {
-            self::$PDO->exec($qb->getDelete());
+            $sth = self::$PDO->prepare($qb->getDelete());
+            $sth->execute($execute);
         }
         $qb->set('is_deleted', 1, 1);
         self::$PDO->exec($qb->getUpdate());
