@@ -167,6 +167,12 @@ abstract class dbr
         }
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
+        if (count($this->_where_extra_fields) > 0) {
+            foreach ($this->_where_extra_fields as $ff) {
+                $execute[$ff] = $this->$ff;
+                $qb->where($ff, ':'.$ff);
+            }
+        }
         if ($is_psychical) {
             self::$PDO->exec($qb->getDelete());
         }
