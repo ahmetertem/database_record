@@ -20,7 +20,7 @@
     },
     "autoload": {
         "files": [
-            "src/dbr.php"
+            "src/dbr.php",
             "src/dbrs.php"
         ]
     }
