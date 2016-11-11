@@ -37,7 +37,7 @@ class dbrs
                 $rows[] = $x;
             }
             if (dbr::$PHP_FAST_CACHE !== null) {
-                $cached_string->set($row);
+                $cached_string->set($rows);
                 $cached_string->addTag($qb->table(null));
                 dbr::$PHP_FAST_CACHE->save($cached_string);
             }

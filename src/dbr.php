@@ -123,6 +123,7 @@ abstract class dbr
         $this->parseFields();
         if (self::$PHP_FAST_CACHE !== null) {
             self::$PHP_FAST_CACHE->deleteItem(self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
+            self::$PHP_FAST_CACHE->deleteItemsByTag($this->_table_name);
         }
         $qb = new qb();
         $qb->table($this->_table_name);
@@ -164,6 +165,7 @@ abstract class dbr
         }
         if (self::$PHP_FAST_CACHE !== null) {
             self::$PHP_FAST_CACHE->deleteItem(self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$this->{$this->_id_field});
+            self::$PHP_FAST_CACHE->deleteItemsByTag($this->_table_name);
         }
         $qb = new qb();
         $qb->table($this->_table_name)->where($this->_id_field, $this->{$this->_id_field})->setLimit(1);
