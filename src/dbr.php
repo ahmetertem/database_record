@@ -109,6 +109,9 @@ abstract class dbr
             if ($this->_id_field != null && intval($this->{$this->_id_field}) == 0) {
                 $this->{$this->_id_field} = self::$PDO->lastInsertId();
             }
+            if (self::$PHP_FAST_CACHE !== null) {
+                self::$PHP_FAST_CACHE->deleteItemsByTag($this->_table_name);
+            }
         }
     }
 
