@@ -1,28 +1,27 @@
 {
     "name": "ahmetertem/database_record",
-    "type" : "library",
+    "type": "library",
     "description": "Database Record Class",
-    "keywords": ["php mysql","pdo","mysql","orm class", "orm"],
+    "keywords": ["php mysql", "pdo", "mysql", "orm class", "orm"],
     "homepage": "http://www.ahmetertem.com",
     "license": "MIT",
-    "authors": [
-            {
-                "name": "Ahmet Ertem",
-                "email": "amadertem@gmail.com",
-                "homepage": "http://www.ahmetertem.com",
-                "role": "Lead Developer"
-            }
-        ],
+    "authors": [{
+        "name": "Ahmet Ertem",
+        "email": "amadertem@gmail.com",
+        "homepage": "http://www.ahmetertem.com",
+        "role": "Lead Developer"
+    }],
     "require": {
         "php": ">=5.3.0",
-		"ahmetertem/query_builder": "1.*"
+        "ahmetertem/query_builder": "1.*"
     },
-	"suggest": {
-		"phpfastcache/phpfastcache": "dev-final"
-	},
+    "suggest": {
+        "phpfastcache/phpfastcache": "dev-final"
+    },
     "autoload": {
         "files": [
             "src/dbr.php"
+            "src/dbrs.php"
         ]
     }
 }
