@@ -68,6 +68,9 @@ abstract class dbr
                 self::$PHP_FAST_CACHE->save($cached_string);
             }
         }
+        if (method_exists($this, 'afterGet')) {
+            $this->afterGet();
+        }
         if ($row == false) {
             return false;
         }
@@ -108,6 +111,9 @@ abstract class dbr
         } else {
             if ($this->_id_field != null && intval($this->{$this->_id_field}) == 0) {
                 $this->{$this->_id_field} = self::$PDO->lastInsertId();
+            }
+            if (method_exists($this, 'afterInsert')) {
+                $this->afterInsert();
             }
             if (self::$PHP_FAST_CACHE !== null) {
                 self::$PHP_FAST_CACHE->deleteItemsByTag($this->_table_name);
@@ -156,6 +162,9 @@ abstract class dbr
             }
             throw new \Exception($error[2]);
         }
+        if (method_exists($this, 'afterUpdate')) {
+            $this->afterUpdate();
+        }
     }
 
     public function delete($is_psychical = false)
@@ -182,8 +191,16 @@ abstract class dbr
         if ($is_psychical) {
             $sth = self::$PDO->prepare($qb->getDelete());
             $sth->execute($execute);
+            if (method_exists($this, 'afterDelete')) {
+                $this->afterDelete(true);
+            }
+
+            return;
         }
         $qb->set('is_deleted', 1, 1);
         self::$PDO->exec($qb->getUpdate());
+        if (method_exists($this, 'afterDelete')) {
+            $this->afterDelete();
+        }
     }
 }
