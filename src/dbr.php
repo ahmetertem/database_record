@@ -12,6 +12,7 @@ abstract class dbr
     protected $_table_name;
     protected $_id_field = null;
     protected $_where_extra_fields = array();
+	protected $_cache_expire_seconds = 0;
 
     private $_parsed_fields = array();
 
@@ -64,7 +65,7 @@ abstract class dbr
             $sth->execute($execute);
             $row = $sth->fetch(\PDO::FETCH_ASSOC);
             if (self::$PHP_FAST_CACHE !== null) {
-                $cached_string->set($row);
+                $cached_string->set($row)->expiresAfter($this->_cache_expire_seconds);
                 self::$PHP_FAST_CACHE->save($cached_string);
             }
         }
