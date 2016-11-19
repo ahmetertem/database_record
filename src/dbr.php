@@ -84,7 +84,9 @@ abstract class dbr
         foreach ($this->_parsed_fields as $key => $value) {
             if (isset($array[$value])) {
                 $this->$key = $array[$value];
-            }
+            } else {
+				$this->$key = null;
+			}
         }
     }
 
