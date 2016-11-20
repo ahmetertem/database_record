@@ -87,6 +87,7 @@ abstract class dbr
             return false;
         }
         $this->fillFromArray($row);
+		return true;
 	}
 
     public function fillFromArray($array)
