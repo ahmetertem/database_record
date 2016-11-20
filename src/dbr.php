@@ -63,7 +63,7 @@ abstract class dbr
             $execute = array();
 			$qb->table($this->_table_name)->limit = 1;
 			foreach($fields as $key => $value) {
-				$qb->where($key, ':'.$key)
+				$qb->where($key, ':'.$key);
 				$execute[$key] = $value;
 			}
             if (count($this->_where_extra_fields) > 0) {
