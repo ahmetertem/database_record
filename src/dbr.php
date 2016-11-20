@@ -60,10 +60,12 @@ abstract class dbr
         }
         if ($row == null) {
             $qb = new qb();
-            $execute = array('id' => $id);
-            $qb->table($this->_table_name)
-                ->where($this->_id_field, ':id')
-                ->limit = 1;
+            $execute = array();
+			$qb->table($this->_table_name)->limit = 1;
+			foreach($fields as $key => $value) {
+				$qb->where($key, ':'.$key)
+				$execute[$key] = $value;
+			}
             if (count($this->_where_extra_fields) > 0) {
                 foreach ($this->_where_extra_fields as $ff) {
                     $execute[$ff] = $this->$ff;
