@@ -37,16 +37,25 @@ abstract class dbr
 
     public function getById($id)
     {
-        if (is_null($this->_table_name) || $this->_table_name == null) {
-            throw new \Exception('_table_name is null');
-        }
         if (is_null($this->_id_field) || $this->_id_field == null) {
             throw new \Exception('_id_field is null');
         }
-        $this->parseFields();
+		return $this->getByArgs(array($this->_id_field => $id));
+    }
+
+	public function getByArgs($fields)
+	{
+		if (is_null($this->_table_name) || $this->_table_name == null) {
+            throw new \Exception('_table_name is null');
+        }
+		$this->parseFields();
         $row = null;
         if (self::$PHP_FAST_CACHE !== null) {
-            $cached_string = self::$PHP_FAST_CACHE->getItem(self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.'.$id);
+			$cache_key = self::$PHP_FAST_CACHE_PREFIX.$this->_table_name.'.';
+			foreach($fields as $key => $value) {
+				$cache_key .= $key.'.'.$value;
+			}
+            $cached_string = self::$PHP_FAST_CACHE->getItem($cache_key);
             $row = $cached_string->get();
         }
         if ($row == null) {
@@ -76,7 +85,7 @@ abstract class dbr
             return false;
         }
         $this->fillFromArray($row);
-    }
+	}
 
     public function fillFromArray($array)
     {
