@@ -23,7 +23,7 @@ abstract class dbr
         if (self::$PDO == null) {
             throw new \Exception('PDO must be set as static variable!');
         }
-		if($this->_deleted_field != null && self::$DELETED_FIELD != null) {
+		if($this->_deleted_field == null && self::$DELETED_FIELD != null) {
 			$this->_deleted_field = self::$DELETED_FIELD;
 		}
     }
