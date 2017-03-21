@@ -7,10 +7,12 @@ abstract class dbr
     public static $PHP_FAST_CACHE_PREFIX = null;
     public static $PHP_FAST_CACHE = null;
     public static $PDO = null;
+    public static $DELETED_FIELD = null;
 
     protected $_fields = array();
     protected $_table_name;
     protected $_id_field = null;
+    protected $_deleted_field = null;
     protected $_where_extra_fields = array();
 	protected $_cache_expire_seconds = 0;
 
@@ -21,6 +23,9 @@ abstract class dbr
         if (self::$PDO == null) {
             throw new \Exception('PDO must be set as static variable!');
         }
+		if($this->_deleted_field != null && self::$DELETED_FIELD != null) {
+			$this->_deleted_field = self::$DELETED_FIELD;
+		}
     }
 
     protected function parseFields()
@@ -203,6 +208,9 @@ abstract class dbr
                 $qb->where($ff, ':'.$ff);
             }
         }
+		if($this->_deleted_field == null) {
+			$is_psychical = true;
+		}
         if ($is_psychical) {
             $sth = self::$PDO->prepare($qb->getDelete());
             $sth->execute($execute);
@@ -212,7 +220,7 @@ abstract class dbr
 
             return;
         }
-        $qb->set('is_deleted', 1, 1);
+        $qb->set($this->_deleted_field, 1, 1);
         self::$PDO->exec($qb->getUpdate());
         if (method_exists($this, 'afterDelete')) {
             $this->afterDelete();
